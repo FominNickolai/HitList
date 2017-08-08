@@ -36,7 +36,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="Luj-vU-LA0">
-                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="1rT-lV-8gG">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="1rT-lV-8gG">
                             <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="addName:" destination="BYZ-38-t0r" id="ZEA-ul-dwE"/>

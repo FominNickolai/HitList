@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import CoreData
 
 class ViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
-    var names: [String] = []
+    var people: [NSManagedObject] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +29,7 @@ class ViewController: UIViewController {
         let alert  = UIAlertController(title: "New Name", message: "Add a new name", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "Save", style: .default) { [unowned self] (action) in
             guard let textField = alert.textFields?.first, let nameToSave = textField.text else { return }
-            self.names.append(nameToSave)
+            self.save(name: nameToSave)
             self.tableView.reloadData()
         }
         
@@ -40,15 +41,33 @@ class ViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    func save(name: String) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext)!
+        let person = NSManagedObject(entity: entity, insertInto: managedContext)
+        person.setValue(name, forKey: "name")
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+    }
+    
 }
 //MARK: - UITableViewDataSource
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return names.count
+        return people.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = names[indexPath.row]
+        let person = people[indexPath.row]
+        cell.textLabel?.text = person.value(forKey: "name") as? String
         return cell
     }
 }
